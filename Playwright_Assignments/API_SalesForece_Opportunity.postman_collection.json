@@ -1,0 +1,447 @@
+{
+  "info": {
+    "_postman_id": "9e416cf6-568e-473f-8567-3650b03a67eb",
+    "name": "API_SalesForece_Opportunity",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "52616102",
+    "_collection_link": "https://go.postman.co/collection/52616102-9e416cf6-568e-473f-8567-3650b03a67eb?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "SF_AccessToken Generation",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "var resp = pm.response.json();\r",
+              "var AccessToken = resp.access_token\r",
+              "\r",
+              "pm.globals.set(\"AccessToken_Opp\",AccessToken)\r",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/x-www-form-urlencoded",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "urlencoded",
+          "urlencoded": [
+            {
+              "key": "grant_type",
+              "value": "password",
+              "type": "text",
+              "uuid": "7f546253-ce01-4413-8ec9-6999f9df9a55"
+            },
+            {
+              "key": "client_id",
+              "value": "3MVG9rZjd7MXFdLhTFd7jYNtTiu5DzDqdNCte5DvFnv7tbIspjQ9CGPizYGUq7h6T69VSmfqxT9yY2NS7tz84",
+              "type": "text",
+              "uuid": "00997274-152c-4a7e-92b1-24d0d6bb4f24"
+            },
+            {
+              "key": "client_secret",
+              "value": "09FE1EF4BDD93B17821073243A441F8A780A639C21D925B575C1112A3F5E0DBE",
+              "type": "text",
+              "uuid": "3be0e49a-2f33-4e7b-9945-eec01a8a1992"
+            },
+            {
+              "key": "username",
+              "value": "gauthami.vn@testleaf.com",
+              "type": "text",
+              "uuid": "cbe88971-149e-4011-97a7-51ccffe8c456"
+            },
+            {
+              "key": "password",
+              "value": "Testleaf@2026",
+              "type": "text",
+              "uuid": "2ac66812-e29a-406a-bc94-6ed24e2a389a"
+            }
+          ]
+        },
+        "url": {
+          "raw": "https://login.salesforce.com/services/oauth2/token",
+          "protocol": "https",
+          "host": [
+            "login",
+            "salesforce",
+            "com"
+          ],
+          "path": [
+            "services",
+            "oauth2",
+            "token"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Create_Opportunity",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 201\", function () {\r",
+              "    pm.response.to.have.status(201);\r",
+              "});\r",
+              "\r",
+              "var resp=pm.response.json()\r",
+              "var opp_ID= resp.id\r",
+              "\r",
+              "pm.globals.set(\"Opp_ID\",opp_ID)\r",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{AccessToken_Opp}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n\"Name\":\"Opportunity Vaishnavi\",\r\n\"CloseDate\":\"2025-03-15\",\r\n\"StageName\":\"Prospecting\"\r\n\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{SF_Instance_url}}/services/data/v59.0/sobjects/Opportunity",
+          "host": [
+            "{{SF_Instance_url}}"
+          ],
+          "path": [
+            "services",
+            "data",
+            "v59.0",
+            "sobjects",
+            "Opportunity"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Fetching the Opportunity",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {\r",
+              "    pm.response.to.have.status(200);\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{AccessToken_Opp}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": ""
+        },
+        "url": {
+          "raw": "{{SF_Instance_url}}/services/data/v59.0/sobjects/Opportunity/{{Opp_ID}}",
+          "host": [
+            "{{SF_Instance_url}}"
+          ],
+          "path": [
+            "services",
+            "data",
+            "v59.0",
+            "sobjects",
+            "Opportunity",
+            "{{Opp_ID}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Updating Opportunity",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 204\", function () {\r",
+              "    pm.response.to.have.status(204);\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{AccessToken_Opp}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"Type\":\"New Customer\",\r\n    \"StageName\":\"Prospecting\"\r\n    \r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{SF_Instance_url}}/services/data/v59.0/sobjects/Opportunity/{{Opp_ID}}",
+          "host": [
+            "{{SF_Instance_url}}"
+          ],
+          "path": [
+            "services",
+            "data",
+            "v59.0",
+            "sobjects",
+            "Opportunity",
+            "{{Opp_ID}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Fetching the Updated Opportunity",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {\r",
+              "    pm.response.to.have.status(200);\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{AccessToken_Opp}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": ""
+        },
+        "url": {
+          "raw": "{{SF_Instance_url}}/services/data/v59.0/sobjects/Opportunity/",
+          "host": [
+            "{{SF_Instance_url}}"
+          ],
+          "path": [
+            "services",
+            "data",
+            "v59.0",
+            "sobjects",
+            "Opportunity",
+            ""
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Delete_Opportunity",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 204\", function () {\r",
+              "    pm.response.to.have.status(204);\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{AccessToken_Opp}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "DELETE",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": ""
+        },
+        "url": {
+          "raw": "{{SF_Instance_url}}/services/data/v59.0/sobjects/Opportunity/{{Opp_ID}}",
+          "host": [
+            "{{SF_Instance_url}}"
+          ],
+          "path": [
+            "services",
+            "data",
+            "v59.0",
+            "sobjects",
+            "Opportunity",
+            "{{Opp_ID}}"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}
